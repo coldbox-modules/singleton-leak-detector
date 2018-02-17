@@ -1,6 +1,7 @@
 component singleton accessors=true {
 	
 	property name="singletons" type="struct";
+	property name="controller" inject="coldbox";
 	
 	function init() {
 		// A data structure to track our singletons
@@ -23,7 +24,7 @@ component singleton accessors=true {
 		 	systemoutput( 'REgistering: #name#', 1  );
 		 	if( !singletons.keyExists( name ) ) {
 				instance[ '$scopeSpy' ] = $scopeSpy;
-				var targetScope = instance.$scopeSpy();
+				var targetScope = instance.$scopeSpy( controller );
 				singletons[ name ] = {
 					instance : instance,
 					originalScope : targetScope 	
@@ -46,7 +47,7 @@ component singleton accessors=true {
 		singletons.each( function( k, v ) {
 			
 			// Create a copy of the singleton's current variables scope
-			var newScope = duplicate( v.instance.$scopeSpy() );
+			var newScope = duplicate( v.instance.$scopeSpy( controller ) );
 			// Initialize details about the CFC
 			var details = {
 				originalScope : v.originalScope,
@@ -60,8 +61,11 @@ component singleton accessors=true {
 				
 				// See if it didn't exist before
 				if( 
-					!scopeKey.findNoCase( 'EXECUTIONTIME' ) 
+					// cfquery seems to litter cfquery.execuiontime stuff around
+					!scopeKey.findNoCase( 'EXECUTIONTIME' )  
+					// Ignore variables.instance. 
 					&& scopeKey != 'instance' 
+					// cfstoredprocs litter this variable around
 					&& scopeKey != 'CFSTOREDPROC'
 					&& !v.originalScope.keyExists( scopeKey )
 				) {
@@ -69,9 +73,13 @@ component singleton accessors=true {
 					
 				// ... or if its value has changed
 				} else if( 
+					// cfquery seems to litter cfquery.execuiontime stuff around
 					!scopeKey.findNoCase( 'EXECUTIONTIME' ) 
+					// Ignore variables.instance. 
 					&& scopeKey != 'instance'
+					// cfstoredprocs litter this variable around
 					&& scopeKey != 'CFSTOREDPROC'
+					// new and old versions of the varible are different
 					&& v.originalScope[ scopeKey ].toString() != scopeValue.toString()
 				) {
 					details.modifiedVariables[ scopeKey ] = {
@@ -104,13 +112,17 @@ component singleton accessors=true {
 	/**
 	* A mixin to add to our singleons we're tracking
 	*/
-	function $scopeSpy() {
+	function $scopeSpy( required controller ) {
+		var md = controller.getUtil().getInheritedMetaData( this );
+		var props = md.properties.map( function( prop ){ 
+			return prop.name;
+		} );
 		// Return the variables scope...
 		return variables
-			// ... but ignore UDFs and CFC instances.
-			// TODO: perhaps just ignore UDFs and properties?
+			// ... but ignore UDFs, CFCs (mostly for performance) and properties
+			// Ignoring CONDITIONALS_SQL_MAP since it's part of the base ORM service
 			.filter( function( k, v ) {
-				return !isCustomFunction( v ) && !isObject( v );
+				return !isCustomFunction( v ) && !props.findNoCase( k ) && !isObject( v ) && k != 'CONDITIONALS_SQL_MAP';
 			} );
 	}
 
