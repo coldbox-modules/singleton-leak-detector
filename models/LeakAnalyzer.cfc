@@ -2,10 +2,19 @@ component singleton accessors=true {
 	
 	property name="singletons" type="struct";
 	
-	function init() {		
+	function init() {
+		// A data structure to track our singletons
 		singletons = singletons ?: {};
 	}
 	
+	/**
+	* Add a new singleton to the list of singletons being tracked.
+	* If a singleton by this name already exists, we accept the new instance, 
+	* but keep using the original variables scope from the first one.
+	* 
+	* @name The name of the instance to register
+	* @instance The actual CFC instance
+	*/
 	function registerSingleton( name, instance ) {
 		if( 
 			!getMetaData( instance ).name.lcase().startsWith( 'coldbox.system.' )
@@ -24,14 +33,21 @@ component singleton accessors=true {
 		 		singletons[ name ].instance = instance;
 		 	}
 		}
-	};
+	}
 
-	function getLeaks() {
+	
+	/**
+	* Return a struct of data representing leaky CFCs.
+	*/
+	struct function getLeaks() {
 		var leakers = {};
 		
+		// For every singleton we're tracking
 		singletons.each( function( k, v ) {
 			
+			// Create a copy of the singleton's current variables scope
 			var newScope = duplicate( v.instance.$scopeSpy() );
+			// Initialize details about the CFC
 			var details = {
 				originalScope : v.originalScope,
 				newScope : newScope,
@@ -39,9 +55,10 @@ component singleton accessors=true {
 				modifiedVariables = {}
 			};
 			
+			// For every varible in the new internal scope
 			newScope.each( function( scopeKey, scopeValue ){
 				
-				// New variable that didn't exist before
+				// See if it didn't exist before
 				if( 
 					!scopeKey.findNoCase( 'EXECUTIONTIME' ) 
 					&& scopeKey != 'instance' 
@@ -50,7 +67,7 @@ component singleton accessors=true {
 				) {
 					details.newVariables[ scopeKey ] = scopeValue;
 					
-				// value that has changed
+				// ... or if its value has changed
 				} else if( 
 					!scopeKey.findNoCase( 'EXECUTIONTIME' ) 
 					&& scopeKey != 'instance'
@@ -63,10 +80,9 @@ component singleton accessors=true {
 					};
 				}
 				
-				
-				
 			} );
-				 
+			
+			// If we found at least one new or modified variable, then tag it as leaky!
 			if( details.newVariables.count() || details.modifiedVariables.count() ) {
 				leakers[ k ] = details;	
 			}			
@@ -76,12 +92,23 @@ component singleton accessors=true {
 		return leakers;
 	}
 
-	function getTrackedSingletons() {
+	
+	/**
+	* Return the full struct of tracked singletons.
+	*/
+	struct function getTrackedSingletons() {
 		return singletons;
 	}
 
+	
+	/**
+	* A mixin to add to our singleons we're tracking
+	*/
 	function $scopeSpy() {
+		// Return the variables scope...
 		return variables
+			// ... but ignore UDFs and CFC instances.
+			// TODO: perhaps just ignore UDFs and properties?
 			.filter( function( k, v ) {
 				return !isCustomFunction( v ) && !isObject( v );
 			} );
