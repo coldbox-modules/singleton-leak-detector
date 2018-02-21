@@ -114,6 +114,7 @@ component singleton accessors=true {
 	*/
 	function $scopeSpy( required controller ) {
 		var md = controller.getUtil().getInheritedMetaData( this );
+		param md.properties = [];
 		var props = md.properties.map( function( prop ){ 
 			return prop.name;
 		} );
