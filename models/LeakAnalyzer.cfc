@@ -5,7 +5,7 @@ component singleton accessors=true {
 	
 	function init() {
 		// A data structure to track our singletons
-		singletons = singletons ?: {};
+		singletons = singletons ?: structnew();
 	}
 	
 	/**
