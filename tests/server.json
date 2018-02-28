@@ -1,0 +1,14 @@
+{
+    "web":{
+        "http":{
+            "port":"60299"
+        },
+        "rewrites":{
+            "enable":"true"
+        }
+    },
+    "openBrowser":"false",
+    "app":{
+        "cfengine":"adobe@11"
+    }
+}
