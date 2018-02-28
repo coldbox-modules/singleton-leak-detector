@@ -21,7 +21,9 @@ component singleton accessors=true {
 			!getMetaData( instance ).name.lcase().startsWith( 'coldbox.system.' )
 			&& !name.findNoCase( 'singleton-leak-detector' )			
 		 ) {
-		 	systemoutput( 'REgistering: #name#', 1  );
+
+			writedump( var='Registering: #name#', output="console"  );
+			 
 		 	if( !singletons.keyExists( name ) ) {
 				instance[ '$scopeSpy' ] = $scopeSpy;
 				var targetScope = instance.$scopeSpy( controller );
