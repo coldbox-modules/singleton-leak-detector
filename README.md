@@ -24,6 +24,24 @@ For new variables, the var name and value will be shown to you.   For modified v
 
 To confirm that this module is tracking all of the singletons in your app, click the "Show all tracked Singletons" button. Please note that this module will only start tracking singletons once WireBox has created them.  This means if you don't hit a part of the site that uses a CFC, it may not even be created yet.  This is why it's important to have an automated script that can run through scenarios on your app to ensure that as much of the code has been hit as possible.  This module will only detect leaky code if it has been run!
 
+## False Positives
+
+This library may pick up variables in your code that are not in fact leaks, but rather variables you set over time in a singleton to cache values, etc.  Any CFC instances will be ignored, but that is mostly just because duplicating them is dangerous and comparing them is problematic.  This may get improved in the future.  Other variables that are ignored are:
+
+* cfquery's `executiontime` variable
+* `cfstoredproc` variables
+* variables named `instance`.  
+
+To help reduce the false positives, you can do a couple things.
+
+### Initialize variables in the `init()` method.
+
+Since this library snapshots the `variables` scope when each singleton is created (after `init()` has been called) make sure you've initialized any variables by then.
+
+### If you store state, use a property
+
+If there is a variable you purposefully want to change over the life of a singleton, such as a counter, use a `cfproperty` to declare that variable.  This library will ignore all variables that are declared as properties.  If your CFC extends another CFC, we pay attention to all inherited properties. 
+
 ## Feedback
 
 This project is very new and we'd love feedback on how we can best allow you to filter out false positives in order to get useful feedback on your leaky singletons.  
