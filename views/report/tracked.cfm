@@ -1,18 +1,38 @@
 <cfoutput>
-	<button onClick="javascript:window.location.href='#event.buildLink( 'leakDetector/report/leaks' )#'">Show leaky Singletons</button>
-	<p>
-	If you don't see some of your singletons here, please check and make sure they have the "singleton" annotation in them so WireBox marks them properly.
-	</p>
+	<div class="row">
+		<div class="col-md-12 alert alert-primary" role="alert">
+			<i class="fa fa-info-circle"></i> If you don't see some of your singletons here, please check and make sure they have the "<b>singleton</b>" annotation in them so WireBox marks them properly.
+		</div>
+	</div>
+	<div class="row margin10">
 		<cfif !prc.trackedData.count() >
-			<b>No tracked singletons detected!</b><br>
-			Make sure you singles are tagged with the "singleton" annotation
+			<div class="col-md-12 alert alert-danger" role="alert">
+				<i class="fa fa-exclamation-triangle"></i> <b>No tracked singletons detected!</b> Make sure your singles are tagged with the "<b>singleton</b>" annotation.
+			</div>
 		<cfelse>
-			<ul>
-			<cfloop collection="#prc.trackedData#" item="trackedSingletonName">
-				<li>#trackedSingletonName#</li>				
-			</cfloop>
-			</ul>
+			<div class="col-md-12">
+				<h4 class="text-right">Total <span class="badge badge-secondary">#structCount(prc.trackedData)#</span></h4>
+			</div>
+			<table class="table table-sm table-striped">
+				<thead>
+					<tr>
+						<th scope="col"><h5><sub><i class="fa fa-dot-circle"></i></sub></h5></th>
+						<th scope="col"><h5>Tracked Handlers</h5></th>
+					</tr>
+				</thead>
+				<tbody>
+					<cfset var i = 1>
+					<cfloop collection="#prc.trackedData#" item="trackedSingletonName">
+						<tr>
+							<th scope="row">#i#</th>
+							<td>#trackedSingletonName#</td>
+						</tr>
+						<cfset i = i + 1>	
+					</cfloop>
+				</tbody>
+			</table>
 		</cfif>
+	</div>
 		
 				
 </cfoutput>
