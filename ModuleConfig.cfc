@@ -18,9 +18,12 @@ component {
 
 	function onLoad() {
 		
-		wirebox
-			.getScope( 'singleton' )
-			.getSingletons()
+		structNew()
+			.append( 
+				wirebox
+					.getScope( 'singleton' )
+					.getSingletons()
+			)
 			.each( function( k, v ) {
 				wirebox.getInstance( 'leakAnalyzer@singleton-leak-detector' ).registerSingleton( k, v );
 			} );
