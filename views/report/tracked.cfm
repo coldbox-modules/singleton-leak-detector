@@ -21,13 +21,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<cfset var i = 1>
+					<cfset i = 1>
 					<cfloop collection="#prc.trackedData#" item="trackedSingletonName">
 						<tr>
 							<th scope="row">#i#</th>
 							<td>#trackedSingletonName#</td>
 						</tr>
-						<cfset i = i + 1>	
+						<cfset i++>	
 					</cfloop>
 				</tbody>
 			</table>
