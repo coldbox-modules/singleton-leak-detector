@@ -7,13 +7,19 @@
 		</div>
 	</cfif>
 
+
 	<cfloop collection="#prc.leakData#" item="leakySingletonName">
 		<cfset leakySingleton = prc.leakData[ leakySingletonName ]>
-		<div class="col-md-12 margin30">
+		<cfset leakySingletonPath = getMetadata( prc.trackedData[ leakySingletonName ].instance ).path >
+		<div id="#leakySingletonPath#" class="col-md-12 margin30">
 			<table class="table table-sm" style="border: 1px sold silver">
 				<thead>
-					<tr>
-						<th colspan="4" style="background-color:##f2f2f2"><h4><sub><i class="fa fa-tint"></i></sub> #leakySingletonName#</h4></th>
+					<tr style="background-color:##f2f2f2">
+						<th colspan="3">
+							<h4>#leakySingletonName#<sub></h4>
+							<small>#leakySingletonPath#</small>
+						</th>
+						<th><i class="fa fa-tint"></i></sub></th>
 					</tr>
 				</thead>
 				<tbody>
