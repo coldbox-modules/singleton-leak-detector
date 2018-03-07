@@ -21,7 +21,8 @@
 	.margin30{ margin: 30px; }
 	* { font-family: Arimo; }
 	h1,h2,h3,h4,h5,h6 { font-weight:bold; }
-
+	.leak-color-badge { background-color:##ff9130; color:white; }
+	.leak-color { color:##ff9130;}
 	</style>
 
 </head>
@@ -30,8 +31,8 @@
 	<!--- navbar --->
 	<div class="container">
 		<div class="col-md-12 text-left margin10">
-			<a class="btn btn-dark" href="#event.buildLink( 'leakDetector/report/leaks' )#"><i class="fa fa-tint"></i> Leaks</a>
-			<a class="btn btn-secondary" href="#event.buildLink( 'leakDetector/report/tracked' )#"><i class="fa fa-dot-circle"></i> Tracked</a>
+			<a class="btn btn-warning leak-color-badge" href="#event.buildLink( 'leakDetector/report/leaks' )#"><i class="fa fa-tint"></i> Leaks</a>
+			<a class="btn btn-dark" href="#event.buildLink( 'leakDetector/report/tracked' )#"><i class="fa fa-dot-circle"></i> Tracked</a>
 		</div>
 	</div>
 	<!--- container and views --->
