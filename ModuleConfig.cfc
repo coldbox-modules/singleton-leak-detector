@@ -30,4 +30,13 @@ component {
 		
 	}
 	
+
+	function afterConfigurationLoad() {
+		// Force handler caching to be on so this module can detect leaks in your handlers
+		controller.setSetting( 'handlerCaching', true );
+		controller.getHandlerService().setHandlerCaching( true );
+		// Turn off singleton reload as well.
+		controller.getSetting( "Wirebox" ).singletonReload = false;		
+	}
+	
 }
