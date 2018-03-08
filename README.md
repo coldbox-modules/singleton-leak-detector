@@ -20,6 +20,10 @@ That page will show you all of the singletons that appear to be leaky.  This is 
 
 For new variables, the var name and value will be shown to you.   For modified variables, the new and old values will be displayed.  It is up to you to find the variable declarations in your code and fix them.
 
+## ColdBox Settings
+
+For this module to work, it needs `handlerCaching` set to `true` and `wirebox.singletonReload` set to `false`.  If you don't have those settings in place, the module will set them for you.  
+
 ## Verify
 
 To confirm that this module is tracking all of the singletons in your app, click the "Show all tracked Singletons" button. Please note that this module will only start tracking singletons once WireBox has created them.  This means if you don't hit a part of the site that uses a CFC, it may not even be created yet.  This is why it's important to have an automated script that can run through scenarios on your app to ensure that as much of the code has been hit as possible.  This module will only detect leaky code if it has been run!
