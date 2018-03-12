@@ -18,21 +18,24 @@
 
 	<style>
 	.margin10{ margin: 10px; }
-	.margin30{ margin: 30px; }
+	.margin30{ margin-top: 30px; }
 	* { font-family: Arimo; }
 	h1,h2,h3,h4,h5,h6 { font-weight:bold; }
 	.leak-color-badge { background-color:##ff9130; color:white; }
 	.leak-color { color:##ff9130;}
+	##menu-div { background-color:white; }
 	</style>
 
 </head>
 
 <body>
 	<!--- navbar --->
-	<div class="container">
-		<div class="col-md-12 text-left margin10">
-			<a class="btn btn-warning leak-color-badge" href="#event.buildLink( 'leakDetector/report/leaks' )#"><i class="fa fa-tint"></i> Leaks</a>
-			<a class="btn btn-dark" href="#event.buildLink( 'leakDetector/report/tracked' )#"><i class="fa fa-dot-circle"></i> Tracked</a>
+	<div class="container fixed-top">
+		<div class="col-md-12" id="menu-div">
+			<div class="btn-group margin10" role="group" aria-label="Main Actions">
+				<a class="btn btn-warning leak-color-badge" href="#event.buildLink( 'leakDetector/report/leaks' )#"><i class="fa fa-tint"></i> Leaked</a>
+				<a class="btn btn-dark" href="#event.buildLink( 'leakDetector/report/tracked' )#"><i class="fa fa-dot-circle"></i> Tracked</a>
+			</div>
 		</div>
 	</div>
 	<!--- container and views --->
@@ -40,7 +43,7 @@
 </body>
 
 <footer>
-	<div class="row">
+	<div class="row margin30">
 		<div class="col-md-12 text-center">
 			<a class="btn btn-light" href="##"><i class="fa fa-arrow-up"></i> Back to Top </a>
 		</div>
