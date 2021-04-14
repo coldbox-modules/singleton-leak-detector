@@ -120,6 +120,10 @@ component singleton accessors=true {
 		var props = md.properties.map( function( prop ){ 
 			return prop.name;
 		} );
+		// Work around for virtual inheritance on common class
+		if( md.name contains 'config.Router' ) {
+			props.append( [ 'thisRoute', 'routes', 'moduleRoutingTable' ], true );
+		}
 		// Return the variables scope...
 		return variables
 			// ... but ignore UDFs, CFCs (mostly for performance) and properties
