@@ -72,6 +72,7 @@ component singleton accessors=true {
 					&& scopeKey != 'instance' 
 					// cfstoredprocs litter this variable around
 					&& scopeKey != 'CFSTOREDPROC'
+					&& scopeKey != 'CFLOCK'
 					&& !v.originalScope.keyArray().find( scopeKey )
 				) {
 					details.newVariables[ scopeKey ] = scopeValue;
@@ -84,6 +85,7 @@ component singleton accessors=true {
 					&& scopeKey != 'instance'
 					// cfstoredprocs litter this variable around
 					&& scopeKey != 'CFSTOREDPROC'
+					&& scopeKey != 'CFLOCK'
 					// new and old versions of the variable are different
 					&& oldValue.toString() != scopeValue.toString()
 				) {
