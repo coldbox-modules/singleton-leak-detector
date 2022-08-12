@@ -67,7 +67,7 @@ component singleton accessors=true {
 				// See if it didn't exist before
 				if( 
 					// cfquery seems to litter cfquery.execuiontime stuff around
-					!scopeKey.findNoCase( 'EXECUTIONTIME' )  
+					scopeKey != 'CFQUERY'
 					// Ignore variables.instance. 
 					&& scopeKey != 'instance' 
 					// cfstoredprocs litter this variable around
@@ -79,7 +79,7 @@ component singleton accessors=true {
 				// ... or if its value has changed
 				} else if( 
 					// cfquery seems to litter cfquery.execuiontime stuff around
-					!scopeKey.findNoCase( 'EXECUTIONTIME' ) 
+					scopeKey != 'CFQUERY'
 					// Ignore variables.instance. 
 					&& scopeKey != 'instance'
 					// cfstoredprocs litter this variable around
