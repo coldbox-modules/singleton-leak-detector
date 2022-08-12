@@ -60,7 +60,10 @@ component singleton accessors=true {
 			
 			// For every varible in the new internal scope
 			newScope.each( function( scopeKey, scopeValue ){
-				
+				// Replace nulls with 
+				scopeValue = scopeValue ?: '[NULL]';
+				var oldValue = v.originalScope[ scopeKey ] ?: '[NULL]';
+
 				// See if it didn't exist before
 				if( 
 					// cfquery seems to litter cfquery.execuiontime stuff around
@@ -69,7 +72,7 @@ component singleton accessors=true {
 					&& scopeKey != 'instance' 
 					// cfstoredprocs litter this variable around
 					&& scopeKey != 'CFSTOREDPROC'
-					&& !v.originalScope.keyExists( scopeKey )
+					&& !v.originalScope.keyArray().find( scopeKey )
 				) {
 					details.newVariables[ scopeKey ] = scopeValue;
 					
@@ -81,12 +84,12 @@ component singleton accessors=true {
 					&& scopeKey != 'instance'
 					// cfstoredprocs litter this variable around
 					&& scopeKey != 'CFSTOREDPROC'
-					// new and old versions of the varible are different
-					&& v.originalScope[ scopeKey ].toString() != scopeValue.toString()
+					// new and old versions of the variable are different
+					&& oldValue.toString() != scopeValue.toString()
 				) {
 					details.modifiedVariables[ scopeKey ] = {
 						newValue : scopeValue,
-						oldValue : 	v.originalScope[ scopeKey ]
+						oldValue : 	oldValue
 					};
 				}
 				
@@ -129,6 +132,9 @@ component singleton accessors=true {
 			// ... but ignore UDFs, CFCs (mostly for performance) and properties
 			// Ignoring CONDITIONALS_SQL_MAP since it's part of the base ORM service
 			.filter( function( k, v ) {
+				if( isNull( v ) ) {
+					return true;
+				}
 				return !isCustomFunction( v ) && !props.findNoCase( k ) && !isObject( v ) && k != 'CONDITIONALS_SQL_MAP';
 			} );
 	}
